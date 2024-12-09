@@ -1,0 +1,9 @@
+[dubai]
+node1
+
+[london]
+node2
+
+[region:children]
+dubai
+london

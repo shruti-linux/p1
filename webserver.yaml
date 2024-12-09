@@ -1,0 +1,31 @@
+---
+- name: configure
+  hosts: all
+  tasks:
+  - name: install pkg
+    yum:
+      name: httpd
+      state:  present
+  - name: create file content
+    copy:
+     content: " this is content"
+     dest: /var/www/html/index.html
+  - name: start and enable servie
+    service:
+     name: httpd
+     state: started
+     enabled: yes
+  - name: allow http
+    firewalld:
+     service: http
+     permanent: true
+     state: enabled
+     immediate: true
+  - name: allow port 80 in firewall
+    firewalld:
+      port: 80/tcp
+      permanent: true
+      state: enabled
+      immediate: true
+       
+
