@@ -8,7 +8,7 @@
       state:  present
   - name: create file content
     copy:
-     content: " this is content"
+     content: " this is conttttttttttttent"
      dest: /var/www/html/index.html
   - name: start and enable servie
     service:
