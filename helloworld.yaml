@@ -6,7 +6,7 @@ on:
 jobs:
   hello:
     name: Say Hello
-    runs-on: self-hosted
+    runs-on: practise
 
     steps:
       - name: Print Hello World
