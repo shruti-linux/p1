@@ -1,13 +1,13 @@
-on:
-  push:
-    branches:
-      - main  # Or whichever branch you want
+# on:
+#   push:
+#     branches:
+#       - main  # Or whichever branch you want
 
-jobs:
-  hello:
-    name: Say Hello shruti kulshrestha 
-    runs-on: practise
+# jobs:
+#   hello:
+#     name: Say Hello shruti kulshrestha 
+#     runs-on: practise
 
-    steps:
-      - name: Print Hello World
-        run: echo "Hello, World from self-hosted runner by shruti good monrning!"
+#     steps:
+#       - name: Print Hello World
+#         run: echo "Hello, World from self-hosted runner by shruti good monrning!"
