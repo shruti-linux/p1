@@ -5,7 +5,7 @@ on:
 
 jobs:
   hello:
-    name: Say Hello to shruti
+    name: Say Hello to shruti to telus digital 
     runs-on: self-hosted
 
     steps:
