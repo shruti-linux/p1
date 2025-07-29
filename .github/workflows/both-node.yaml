@@ -6,7 +6,7 @@ on:
 jobs:
   echo-on-prflow:
     name: Echo on CentOS 9 PR Flow Runner
-    runs-on: [self-hosted, centos9, prflow]
+    runs-on: [ prflow ]
 
     steps:
       - name: Say Hello from PR Flow Runner
@@ -17,7 +17,7 @@ jobs:
 
   echo-on-node2:
     name: Echo on CentOS 9 Node 2
-    runs-on: [self-hosted, centos9, node2]
+    runs-on: [ node2 ]
     needs: echo-on-prflow
 
     steps:
