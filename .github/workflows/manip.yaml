@@ -1,0 +1,44 @@
+name: Update Hosts Files
+
+on:
+  workflow_dispatch:
+
+jobs:
+  collect_ips:
+    runs-on: ["prflow", "node2"]
+    outputs:
+      prflow_ip: ${{ steps.get_prflow_ip.outputs.ip }}
+      node2_ip: ${{ steps.get_node2_ip.outputs.ip }}
+
+    steps:
+      - name: Get prflow IP
+        id: get_prflow_ip
+        run: |
+          echo "ip=$(curl -s http://prflow:8080/api/v1/ip || echo '10.0.0.1')" >> $GITHUB_OUTPUT
+
+      - name: Get node2 IP
+        id: get_node2_ip
+        run: |
+          echo "ip=$(curl -s http://node2:8080/api/v1/ip || echo '10.0.0.2')" >> $GITHUB_OUTPUT
+
+  update_hosts:
+    needs: collect_ips
+    strategy:
+      matrix:
+        runner: ["prflow", "node2"]
+    runs-on: [self-hosted, ${{ matrix.runner }}]
+
+    steps:
+      - name: Add prflow entry
+        if: matrix.runner == 'node2'
+        run: |
+          echo "${{ needs.collect_ips.outputs.prflow_ip }} prflow" | sudo tee -a /etc/hosts
+
+      - name: Add node2 entry
+        if: matrix.runner == 'prflow'
+        run: |
+          echo "${{ needs.collect_ips.outputs.node2_ip }} node2" | sudo tee -a /etc/hosts
+
+      - name: Show updated hosts file
+        run: |
+          cat /etc/hosts
