@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Create file with EOF
         run: |
+          su - devops 
           sudo cat << EOF > /home/devops/inventory
           [web]
           node2
