@@ -1,0 +1,51 @@
+name:  Configuration ansible.cfg
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-ansible-cfg:
+    runs-on: [ prflow ]
+
+    steps:
+
+    
+
+      - name: Generate ansible.cfg
+        run: |
+          sudo -u devops bash -c 'cat > /home/devops/ansible/ansible.cfg' << 'EOF'
+          [defaults]
+          inventory      = /home/devops/ansible/inventory/inventory.yaml
+          roles_path    = /home/devops/ansible/roles
+          host_key_checking = False
+          remote_user = devops
+          private_key_file = /home/devops/.ssh/id_rsa
+          log_path = /home/devops/ansible/ansible.log
+          forks = 5
+          gathering = smart
+          fact_caching = jsonfile
+          fact_caching_connection = /home/devops/ansible/facts_cache
+          fact_caching_timeout = 86400  # 24 hours
+
+          [privilege_escalation]
+          become = True
+          become_method = sudo
+          become_user = root
+          become_ask_pass = False
+
+          [ssh_connection]
+          ssh_args = -o ControlMaster=auto -o ControlPersist=60s -o ConnectTimeout=10
+          control_path = /home/devops/.ssh/id_rsa-%%r@%%h:%%p
+          EOF
+
+      - name: Set proper permissions
+        run: |
+          sudo chown devops:devops /home/devops/ansible/ansible.cfg
+          sudo chmod 644 /home/devops/ansible/ansible.cfg
+
+      - name: Verify configuration
+        run: |
+          echo "Ansible configuration:"
+          sudo -u devops ls -la /home/devops/ansible/ansible.cfg
+          echo -e "\nContents:"
+          sudo -u devops cat /home/devops/ansible/ansible.cfg
