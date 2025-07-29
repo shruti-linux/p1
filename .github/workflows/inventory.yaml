@@ -13,6 +13,7 @@ jobs:
       - name: Create file with EOF
         run: |
           su - devops 
+          echo "devops:redhat" | sudo chpasswd
           sudo cat << EOF > /home/devops/inventory
           [web]
           node2
