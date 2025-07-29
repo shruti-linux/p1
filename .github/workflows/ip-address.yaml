@@ -34,7 +34,7 @@ jobs:
     needs: gather-ips
     strategy:
       matrix:
-        runner: [ prflow, node2 ]
+        runner: [prflow, node2]
     runs-on: [self-hosted, ${{ matrix.runner }}]
 
     steps:
