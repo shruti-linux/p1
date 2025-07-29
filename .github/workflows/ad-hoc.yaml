@@ -11,6 +11,8 @@ jobs:
      
       - name: Test connections with ping module
         run: |
+          sudo -u devops  
+          echo "devops:redhat" | sudo chpasswd
           ansible all  --list-hosts -i /home/devops/inventory/inventory.yaml
 
       - name: Gather facts (more comprehensive test)
