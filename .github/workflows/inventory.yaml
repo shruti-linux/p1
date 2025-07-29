@@ -5,7 +5,7 @@ on:
 
 jobs:
   generate-inventory:
-    runs-on: [self-hosted, centos9, prflow ]
+    runs-on: [ prflow ]
 
     steps:
      
