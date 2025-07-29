@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         runner: ["prflow", "node2"]
-    runs-on: [self-hosted, ${{ matrix.runner }}]
+    runs-on: ["self-hosted", "${{ matrix.runner }}"]
 
     steps:
       - name: Check if user exists
