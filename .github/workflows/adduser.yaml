@@ -1,4 +1,4 @@
-name: Create DevOps User on Runners
+name: adduser Create DevOps User on Runners
 
 on:
   workflow_dispatch:
