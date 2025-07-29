@@ -1,4 +1,4 @@
-name: Update /etc/hosts with Runner IPs
+name: Update /etc/hosts on Runners
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         runner: ["prflow", "node2"]
-    runs-on: [self-hosted, prflow]
+    runs-on: [ "self-hosted", "${{ matrix.runner }}"]
 
     steps:
       - name: Get current IP address
@@ -20,13 +20,12 @@ jobs:
 
       - name: Update /etc/hosts
         run: |
-          echo "Adding entries to /etc/hosts"
+          echo "Updating /etc/hosts with:"
           echo "${{ steps.get-ip.outputs.ip }} ${{ matrix.runner }}" | sudo tee -a /etc/hosts
-          echo "Updated /etc/hosts:"
+          echo "Current /etc/hosts:"
           cat /etc/hosts
 
-      - name: Verify changes
+      - name: Verify connectivity
         run: |
-          ping -c 2 prflow || true
-          ping -c 2 node2 || true
-
+          ping -c 2 prflow || echo "Could not ping prflow"
+          ping -c 2 node2 || echo "Could not ping node2"
