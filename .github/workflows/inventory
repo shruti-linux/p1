@@ -1,0 +1,21 @@
+name: Heredoc Example Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  heredoc-demo:
+    runs-on: prflow
+
+    steps:
+      - name: Create file with EOF
+        run: |
+          cat << EOF > /home/devops/inventory
+          [web]
+          node2
+
+          [database]
+          node3
+          
+          EOF
+          cat /home/devops/inventory
