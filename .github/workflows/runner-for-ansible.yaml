@@ -1,0 +1,32 @@
+
+name: Run Ansible Playbook
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+  
+
+jobs:
+  ansible-playbook:
+    runs-on: [master]  # Change this if you're not using a self-hosted runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Ensure Ansible is installed
+        run: |
+          if ! command -v ansible >/dev/null 2>&1; then
+            echo "Installing Ansible..."
+            sudo dnf install -y epel-release
+            sudo dnf install -y ansible
+          else
+            echo "Ansible already installed."
+          fi
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook ansible/playbooks/deploy.yaml -i /home/shruti/inventory
