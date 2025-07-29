@@ -1,0 +1,44 @@
+name: Create DevOps User on Runners
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-user:
+    strategy:
+      matrix:
+        runner: ["prflow", "node2"]
+    runs-on: [self-hosted, ${{ matrix.runner }}]
+
+    steps:
+      - name: Check if user exists
+        id: check-user
+        run: |
+          if id -u devops >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create devops user
+        if: steps.check-user.outputs.exists == 'false'
+        run: |
+          sudo useradd -m -s /bin/bash devops
+          echo "devops:redhat" | sudo chpasswd
+          echo "Created devops user"
+
+      - name: Add to sudoers
+        run: |
+          if ! sudo grep -q "^devops" /etc/sudoers; then
+            echo "devops ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+            echo "Added devops to sudoers"
+          else
+            echo "devops already in sudoers"
+          fi
+
+      - name: Verify setup
+        run: |
+          echo "User status:"
+          id devops
+          echo "Sudo access:"
+          sudo -l -U devops
