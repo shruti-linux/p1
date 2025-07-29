@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Create file with EOF
         run: |
-          cat << EOF > /home/devops/inventory
+          sudo cat << EOF > /home/devops/inventory
           [web]
           node2
 
@@ -20,4 +20,4 @@ jobs:
           node3
           
           EOF
-          cat /home/devops/inventory
+          sudo cat /home/devops/inventory
