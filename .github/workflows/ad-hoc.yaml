@@ -1,0 +1,20 @@
+name: Test Ansible Connections
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-ansible-connections:
+    runs-on: [ prflow ]
+
+    steps:
+     
+      - name: Test connections with ping module
+        run: |
+          ansible all  --list-hosts -i /home/devops/inventory/inventory.yaml
+
+      - name: Gather facts (more comprehensive test)
+        run: |
+          ansible all -m yum -a "name=git state=present"
+          ansible all -m user -a "name=shruti state=present"
+          ansible all -m "id shruti" 
