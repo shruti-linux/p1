@@ -1,25 +1,54 @@
-
-
-name: inventory
+name: Generate Ansible Inventory
 
 on:
   workflow_dispatch:
 
 jobs:
-  heredoc-demo:
-    runs-on: prflow
+  generate-inventory:
+    runs-on: [self-hosted, centos9, prflow ]
 
     steps:
-      - name: Create file with EOF
-        run: |
-          su - devops 
-          echo "devops:redhat" | sudo chpasswd
-          sudo cat << EOF > /home/devops/inventory
-          [web]
-          node2
+     
 
-          [database]
-          node3
-          
+      - name: Create inventory directory
+        run: |
+          sudo -u devops mkdir -p /home/devops/ansible/inventory
+          sudo chown -R devops:devops /home/devops/ansible
+
+      - name: Generate inventory.yaml
+        run: |
+          sudo -u devops bash -c 'cat > /home/devops/ansible/inventory/inventory.yaml' << 'EOF'
+          ---
+          all:
+            children:
+              webservers:
+                hosts:
+                  web01:
+                    ansible_host: 10.128.0.7
+                    ansible_user: devops
+                 
+
+              databases:
+                hosts:
+                  db01:
+                    ansible_host: 10.128.0.8
+                    ansible_user: devops
+                    db_version: 14
+
+            vars:
+              ansible_ssh_private_key_file: /home/devops/.ssh/id_rsa
+              ansible_python_interpreter: /usr/bin/python3
           EOF
-          sudo cat /home/devops/inventory
+
+      - name: Set permissions
+        run: |
+          sudo chown devops:devops /home/devops/ansible/inventory/inventory.yaml
+          sudo chmod 644 /home/devops/ansible/inventory/inventory.yaml
+
+      - name: Verify inventory
+        run: |
+          echo "Inventory file created at:"
+          sudo -u devops ls -la /home/devops/ansible/inventory/
+          echo -e "\nContents:"
+          sudo -u devops cat /home/devops/ansible/inventory/inventory.yaml
+
