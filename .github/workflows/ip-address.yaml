@@ -7,7 +7,7 @@ jobs:
   update-hosts:
     strategy:
       matrix:
-        runner: ["prflow", "node2" ]
+        runner: ["prflow,self-hosted", "node2" ]
     runs-on: [self-hosted, ${{ matrix.runner }}]
 
     steps:
