@@ -20,7 +20,7 @@ jobs:
   echo-on-node1:
     name: Echo on CentOS 9 Node2
     runs-on: [self-hosted, centos9, node2]
-    needs: echo-on-node2
+    needs: echo-on-prflow
 
     steps:
       - name: Say Hello from Node2
