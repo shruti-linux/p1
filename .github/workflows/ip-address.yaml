@@ -1,0 +1,66 @@
+name: Configure Hosts File Across Runners
+
+on:
+  workflow_dispatch:
+
+jobs:
+  gather-ips:
+    name: Gather IP addresses
+    runs-on: [ prflow, node2 ]
+    outputs:
+      prflow_ip: ${{ steps.get-prflow-ip.outputs.ip }}
+      node2_ip: ${{ steps.get-node2-ip.outputs.ip }}
+      node3_ip: ${{ steps.get-node3-ip.outputs.ip }}
+
+    steps:
+      - name: Get prflow IP
+        id: get-prflow-ip
+        run: |
+          IP=$(ssh prflow "hostname -I | awk '{print \$1}'")
+          echo "prflow IP: $IP"
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+
+      - name: Get node2 IP
+        id: get-node2-ip
+        run: |
+          IP=$(ssh node2 "hostname -I | awk '{print \$1}'")
+          echo "node2 IP: $IP"
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+
+      - name: Get node3 IP
+        id: get-node3-ip
+        run: |
+          IP=$(ssh node3 "hostname -I | awk '{print \$1}'")
+          echo "node3 IP: $IP"
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+
+  configure-hosts:
+    name: Update /etc/hosts
+    needs: gather-ips
+    strategy:
+      matrix:
+        runner: [prflow, node2, node3]
+    runs-on: [self-hosted, ${{ matrix.runner }}]
+
+    steps:
+      - name: Get current host IP
+        id: get-ip
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "Current IP: $IP"
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+
+      - name: Update /etc/hosts
+        run: |
+          echo "Updating /etc/hosts with:"
+          echo "${{ needs.gather-ips.outputs.prflow_ip }} prflow" | sudo tee -a /etc/hosts
+          echo "${{ needs.gather-ips.outputs.node2_ip }} node2" | sudo tee -a /etc/hosts
+          echo "${{ needs.gather-ips.outputs.node3_ip }} node3" | sudo tee -a /etc/hosts
+          echo "Updated /etc/hosts:"
+          cat /etc/hosts
+
+      - name: Verify connectivity
+        run: |
+          ping -c 2 prflow
+          ping -c 2 node2
+          ping -c 2 node3
