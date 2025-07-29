@@ -1,4 +1,4 @@
-lfname: Echo Message on Multiple CentOS 9 Runners
+name: Echo Message on Multiple CentOS 9 Runners
 
 on:
   workflow_dispatch:
