@@ -1,4 +1,4 @@
-name: Heredoc Example Workflow
+name: inventory
 
 on:
   workflow_dispatch:
