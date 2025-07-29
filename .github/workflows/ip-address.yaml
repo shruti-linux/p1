@@ -27,19 +27,14 @@ jobs:
           echo "node2 IP: $IP"
           echo "ip=$IP" >> $GITHUB_OUTPUT
 
-      - name: Get node3 IP
-        id: get-node3-ip
-        run: |
-          IP=$(ssh node3 "hostname -I | awk '{print \$1}'")
-          echo "node3 IP: $IP"
-          echo "ip=$IP" >> $GITHUB_OUTPUT
+
 
   configure-hosts:
     name: Update /etc/hosts
     needs: gather-ips
     strategy:
       matrix:
-        runner: [prflow, node2, node3]
+        runner: [prflow, node2 ]
     runs-on: [self-hosted, ${{ matrix.runner }}]
 
     steps:
@@ -63,4 +58,4 @@ jobs:
         run: |
           ping -c 2 prflow
           ping -c 2 node2
-          ping -c 2 node3
+      
