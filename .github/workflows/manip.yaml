@@ -1,44 +1,19 @@
-name: Update Hosts Files
+name: Update /etc/hosts (Hardcoded IPs)
 
 on:
   workflow_dispatch:
 
 jobs:
-  collect_ips:
-    runs-on: ["prflow", "node2"]
-    outputs:
-      prflow_ip: ${{ steps.get_prflow_ip.outputs.ip }}
-      node2_ip: ${{ steps.get_node2_ip.outputs.ip }}
-
-    steps:
-      - name: Get prflow IP
-        id: get_prflow_ip
-        run: |
-          echo "ip=$(hostname -i)" >> $GITHUB_OUTPUT
-
-      - name: Get node2 IP
-        id: get_node2_ip
-        run: |
-          echo "ip=$(hostname -i)" >> $GITHUB_OUTPUT
-
-  update_hosts:
-    needs: collect_ips
+  update-hosts:
     strategy:
       matrix:
         runner: ["prflow", "node2"]
     runs-on: ["self-hosted", "${{ matrix.runner }}"]
 
     steps:
-      - name: Add prflow entry
-        if: matrix.runner == 'node2'
+      - name: Update /etc/hosts
         run: |
-          echo "${{ needs.collect_ips.outputs.prflow_ip }} prflow" | sudo tee -a /etc/hosts
-
-      - name: Add node2 entry
-        if: matrix.runner == 'prflow'
-        run: |
-          echo "${{ needs.collect_ips.outputs.node2_ip }} node2" | sudo tee -a /etc/hosts
-
-      - name: Show updated hosts file
-        run: |
+          echo "10.128.0.7 prflow" | sudo tee -a /etc/hosts
+          echo "10.128.0.8 node2" | sudo tee -a /etc/hosts
+          echo "Updated /etc/hosts:"
           cat /etc/hosts
