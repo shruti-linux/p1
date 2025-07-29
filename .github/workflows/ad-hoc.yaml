@@ -8,44 +8,10 @@ jobs:
     runs-on: [ prflow ]
 
     steps:
-     - name: Install expect (for automated password input)
-       run: sudo dnf install -y expect
-
-     - name: Execute command as devops user
-       env:
-          DEVOPS_PASSWORD: ${{ secrets.DEVOPS_PASSWORD }}  # Store 'redhat' in GitHub secrets
-       run: |
-          # Create expect script
-          cat << 'EOF' > run_as_devops.exp
-          #!/usr/bin/expect -f
-          spawn su - devops -c "whoami && id && hostname && echo $HOME"
-          expect "Password:"
-          send "$env(DEVOPS_PASSWORD)\r"
-          expect eof
-          EOF
-
-          # Make executable and run
-          chmod +x run_as_devops.exp
-          ./run_as_devops.exp
-
-      - name: Verify file creation as devops
-        env:
-          DEVOPS_PASSWORD: ${{ secrets.DEVOPS_PASSWORD }}
-        run: |
-          cat << 'EOF' > create_file.exp
-          #!/usr/bin/expect -f
-          spawn su - devops -c "touch ~/test_file && ls -la ~/test_file"
-          expect "Password:"
-          send "$env(DEVOPS_PASSWORD)\r"
-          expect eof
-          EOF
-          chmod +x create_file.exp
-          ./create_file.exp
+    
       - name: Test connections with ping module
         run: |
-          sudo -u devops  
-          echo "devops:redhat" | sudo chpasswd
-          ansible all  --list-hosts -i /home/devops/inventory/inventory.yaml
+          ansible all --list-hosts -i /home/devops/ansible/inventory/inventory.yaml
 
       - name: Gather facts (more comprehensive test)
         run: |
