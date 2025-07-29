@@ -29,4 +29,4 @@ jobs:
         run: |
           ping -c 2 prflow || true
           ping -c 2 node2 || true
-          ping -c 2 node3 || true
+
