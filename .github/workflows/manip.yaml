@@ -14,12 +14,12 @@ jobs:
       - name: Get prflow IP
         id: get_prflow_ip
         run: |
-          echo "ip=$(curl -s http://prflow:8080/api/v1/ip || echo '10.0.0.1')" >> $GITHUB_OUTPUT
+          echo "ip=$(curl -s http://mastera:80/api/v1/ip || echo '10.0.0.1')" >> $GITHUB_OUTPUT
 
       - name: Get node2 IP
         id: get_node2_ip
         run: |
-          echo "ip=$(curl -s http://node2:8080/api/v1/ip || echo '10.0.0.2')" >> $GITHUB_OUTPUT
+          echo "ip=$(curl -s http://node2:80/api/v1/ip || echo '10.0.0.2')" >> $GITHUB_OUTPUT
 
   update_hosts:
     needs: collect_ips
