@@ -1,0 +1,31 @@
+# Both server exaple
+
+name: Echo Message on Multiple CentOS 9 Runners
+
+on:
+  workflow_dispatch:
+
+jobs:
+  echo-on-mastera:
+    name: Echo on CentOS 9 mastera
+    runs-on: [self-hosted, centos9, mastera]
+
+    steps:
+      - name: Say Hello from mastera
+        run: |
+          echo "👋 Hello from CentOS 9 - mastera"
+          hostname
+          date
+
+  echo-on-node1:
+    name: Echo on CentOS 9 Node2
+    runs-on: [self-hosted, centos9, node2]
+    needs: echo-on-node2
+
+    steps:
+      - name: Say Hello from Node2
+        run: |
+          echo "🚀 Hello from CentOS 9 - Node 2"
+          hostname
+          date
+
