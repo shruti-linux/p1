@@ -1,4 +1,4 @@
-name: Update /etc/hosts on Runners
+name: IP ADDRESS Update /etc/hosts on Runners
 
 on:
   workflow_dispatch:
