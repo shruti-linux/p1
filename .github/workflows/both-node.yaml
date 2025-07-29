@@ -1,31 +1,28 @@
-# Both server exaple
-
 name: Echo Message on Multiple CentOS 9 Runners
 
 on:
   workflow_dispatch:
 
 jobs:
-  echo-on-mastera:
-    name: Echo on CentOS 9 mastera
+  echo-on-prflow:
+    name: Echo on CentOS 9 PR Flow Runner
     runs-on: [self-hosted, centos9, prflow]
 
     steps:
-      - name: Say Hello from mastera
+      - name: Say Hello from PR Flow Runner
         run: |
-          echo "👋 Hello from CentOS 9 - mastera"
+          echo "👋 Hello from CentOS 9 - PR Flow Runner"
           hostname
           date
 
-  echo-on-node1:
-    name: Echo on CentOS 9 Node2
+  echo-on-node2:
+    name: Echo on CentOS 9 Node 2
     runs-on: [self-hosted, centos9, node2]
     needs: echo-on-prflow
 
     steps:
-      - name: Say Hello from Node2
+      - name: Say Hello from Node 2
         run: |
           echo "🚀 Hello from CentOS 9 - Node 2"
           hostname
           date
-
