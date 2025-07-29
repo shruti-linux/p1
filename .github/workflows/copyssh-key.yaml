@@ -1,38 +1,30 @@
-name: Copy SSH Key to node2
+name: SSH Copy SSH Key via GitHub
 
 on:
   workflow_dispatch:
 
 jobs:
-  copy-key:
+  get-key:
     runs-on: [self-hosted, prflow]
+    outputs:
+      pubkey: ${{ steps.extract-key.outputs.key }}
 
     steps:
-      - name: Check if devops user exists on prflow
+      - name: Extract public key
+        id: extract-key
         run: |
-          if ! id -u devops >/dev/null 2>&1; then
-            echo "Error: devops user doesn't exist on prflow"
-            exit 1
-          fi
+          KEY=$(sudo cat /home/devops/.ssh/id_rsa.pub)
+          echo "key=${KEY}" >> $GITHUB_OUTPUT
 
-      - name: Get public key content
-        id: get-key
+  deploy-key:
+    needs: get-key
+    runs-on: [self-hosted, node2]
+    
+    steps:
+      - name: Add key to authorized_keys
         run: |
-          if [ -f /home/devops/.ssh/id_rsa.pub ]; then
-            KEY=$(sudo cat /home/devops/.ssh/id_rsa.pub)
-            echo "key=${KEY}" >> $GITHUB_OUTPUT
-          else
-            echo "Error: No public key found for devops user"
-            exit 1
-          fi
-
-      - name: Copy key to node2
-        run: |
-          ssh node2 "
-            sudo mkdir -p /home/devops/.ssh
-            echo '${{ steps.get-key.outputs.key }}' | sudo tee -a /home/devops/.ssh/authorized_keys
-            sudo chown -R devops:devops /home/devops/.ssh
-            sudo chmod 700 /home/devops/.ssh
-            sudo chmod 600 /home/devops/.ssh/authorized_keys
-            echo 'Public key added to node2'
-          "
+          sudo mkdir -p /home/devops/.ssh
+          echo '${{ needs.get-key.outputs.pubkey }}' | sudo tee -a /home/devops/.ssh/authorized_keys
+          sudo chown -R devops:devops /home/devops/.ssh
+          sudo chmod 700 /home/devops/.ssh
+          sudo chmod 600 /home/devops/.ssh/authorized_keys
