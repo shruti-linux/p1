@@ -1,4 +1,4 @@
-name: Configure Hosts File Across Runners
+name: Configure IP ADDRESS Hosts File Across Runners
 
 on:
   workflow_dispatch:
