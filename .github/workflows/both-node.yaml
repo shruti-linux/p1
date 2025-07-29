@@ -1,4 +1,4 @@
-name: Echo Message on Multiple CentOS 9 Runners
+lfname: Echo Message on Multiple CentOS 9 Runners
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
 jobs:
   echo-on-prflow:
     name: Echo on CentOS 9 PR Flow Runner
-    runs-on: [ prflow ]
+    runs-on: [ self-hosted ]
 
     steps:
       - name: Say Hello from PR Flow Runner
