@@ -6,7 +6,7 @@ on:
 jobs:
   install-ansible:
     name: Install Ansible
-    runs-on: [ prflow ]
+    runs-on: [ self-hosted, prflow, linux ]
 
     steps:
       - name: Show system info
