@@ -6,7 +6,7 @@ on:
 jobs:
   install-ansible:
     name: Install Ansible
-    runs-on: [self-hosted, centos9]
+    runs-on: [self-hosted, centos9, prflow]
 
     steps:
       - name: Show system info
