@@ -1,0 +1,30 @@
+name: Create SSH Key on prflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-ssh-key:
+    runs-on: [self-hosted, prflow]
+
+    steps:
+      - name: Create SSH directory
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+      - name: Generate SSH key
+        run: |
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -q
+          echo "SSH key generated successfully"
+
+      - name: Display public key
+        run: |
+          echo "Public key:"
+          cat ~/.ssh/id_rsa.pub
+          echo "Add this to your authorized_keys where needed"
+
+      - name: Set correct permissions
+        run: |
+          chmod 600 ~/.ssh/id_rsa
+          chmod 644 ~/.ssh/id_rsa.pub
