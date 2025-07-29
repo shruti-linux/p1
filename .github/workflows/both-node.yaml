@@ -8,7 +8,7 @@ on:
 jobs:
   echo-on-mastera:
     name: Echo on CentOS 9 mastera
-    runs-on: [self-hosted, centos9, mastera]
+    runs-on: [self-hosted, centos9, prflow]
 
     steps:
       - name: Say Hello from mastera
