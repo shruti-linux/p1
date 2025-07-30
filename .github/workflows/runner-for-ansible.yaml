@@ -11,7 +11,7 @@ on:
 
 jobs:
   ansible-playbook:
-    runs-on: [main]  # Change this if you're not using a self-hosted runner
+    runs-on: [prflow]  # Change this if you're not using a self-hosted runner
 
     steps:
       - name: Checkout code
