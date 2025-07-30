@@ -26,7 +26,27 @@ jobs:
           else
             echo "Ansible already installed."
           fi
-
-      - name: Run Ansible Playbook
+  
+      - name: Run Ansible commands
         run: |
-          ansible-playbook ansible/playbook1-webserver.yaml -i /home/devops/inventory/inventory.yaml
+          /usr/bin/expect <<EOD
+          set timeout 30
+        
+          # First spawn: Change directory and run Ansible commands
+            spawn sudo -u devops bash -c "
+            cd /home/devops/ansible/ && \
+            ansible all --list-hosts -i inventory/inventory.yaml && \
+            ansible-playbook ansible/playbook1-webserver.yaml -i /home/devops/inventory/inventory.yaml
+        "
+        
+        expect {
+          "password for" {
+            send "${{ secrets.DEVOPS_PASSWORD }}\r"
+            
+          }
+         
+          eof
+        }
+        EOD
+      shell: bash
+      
