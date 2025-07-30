@@ -1,0 +1,31 @@
+- name: configure webserver
+  hosts: all
+  tasks:
+  - name: installing package
+    yum:
+     name: httpd
+     state: present
+
+  - name: create file with content 
+    copy:
+     content: "This is our first playbook"
+     dest: /var/www/html/index.html
+
+  - name: start and enable httpd service
+    service:
+     name: httpd
+     state: started
+     enabled: yes
+
+  - name: start and enable firewalld service
+    service:
+     name: firewalld
+     state: started
+     enabled: yes
+
+  - name: enable http to firewall
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+      immediate: true
