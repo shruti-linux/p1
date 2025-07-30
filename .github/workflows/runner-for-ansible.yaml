@@ -36,17 +36,17 @@ jobs:
             spawn sudo -u devops bash -c "
             cd /home/devops/ansible/ && \
             ansible all --list-hosts -i inventory/inventory.yaml && \
-            ansible-playbook ansible/playbook1-webserver.yaml -i /home/devops/inventory/inventory.yaml
-        "
+            ansible-playbook ansible/playbook1-webserver.yaml -i /home/devops/inventory/inventory.yaml"
+      
         
-        expect {
-          "password for" {
-            send "${{ secrets.DEVOPS_PASSWORD }}\r"
+            expect {
+               "password for" {
+                send "${{ secrets.DEVOPS_PASSWORD }}\r"
             
-          }
+             }
          
-          eof
-        }
-        EOD
-      shell: bash
+             eof
+           }
+           EOD
+          shell: bash
       
