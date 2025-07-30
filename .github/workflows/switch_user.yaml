@@ -20,10 +20,10 @@ jobs:
         /usr/bin/expect <<EOD
         spawn cd ansible 
         spawn sudo -u devops ansible all --list-hosts -i /home/devops/ansible/inventory/inventory.yaml
-        spawn sudo -u devops ansible all -m yum -a "name=git state=present"
-        spawn sudo -u devops ansible all -m user -a "name=shruti state=present"
-        spawn sudo -u devops ansible all -m "id shruti" 
-        
+        spawn sudo -u devops ansible all -m yum -a "name=git state=present" -i /home/devops/ansible/inventory/inventory.yaml
+        spawn sudo -u devops ansible all -m user -a "name=shruti state=present" -i /home/devops/ansible/inventory/inventory.yaml
+        spawn sudo -u devops ansible all -a "id shruti"    -i /home/devops/ansible/inventory/inventory.yaml
+ 
       shell: bash
 
     - name: Gather facts (more comprehensive test)
