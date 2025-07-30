@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install expect
-      run: sudo apt-get install -y expect
+      run: sudo dnf install -y expect
 
     - name: Run Ansible commands
       run: |
