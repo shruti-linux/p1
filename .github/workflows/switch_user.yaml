@@ -1,4 +1,4 @@
-name: Run Ansible as devops user
+name: Run Ansible Commands
 
 on:
   workflow_dispatch:
@@ -11,28 +11,30 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install expect (if needed)
-      run: sudo dnf install -y expect
+    - name: Install expect
+      run: sudo apt-get install -y expect
 
-    - name: Run Ansible command as devops user
+    - name: Run Ansible commands
       run: |
-        # Using expect to handle password prompt securely
         /usr/bin/expect <<EOD
-        spawn sudo -u devops cd /home/devops/ansible/ 
-        spawn sudo -u devops ansible all --list-hosts -i /home/devops/ansible/inventory/inventory.yaml
-        spawn sudo -u devops ansible all -m yum -a "name=git state=present" -i /home/devops/ansible/inventory/inventory.yaml
-        spawn sudo -u devops ansible all -m user -a "name=shruti state=present" -i /home/devops/ansible/inventory/inventory.yaml
-        spawn sudo -u devops ansible all -a "id shruti"    -i /home/devops/ansible/inventory/inventory.yaml
-        expect "password for" 
-        send "${{ secrets.DEVOPS_PASSWORD }}\r"
-        expect eof
-        EOD
- 
-      shell: bash
-
-    - name: Gather facts (more comprehensive test)
-      run: |
-        ansible all -m yum -a "name=git state=present"
-        ansible all -m user -a "name=shruti state=present"
-          ansible all -m "id shruti" 
+        set timeout 30
         
+        # First spawn: Change directory and run Ansible commands
+        spawn sudo -u devops bash -c "
+          cd /home/devops/ansible/ && \
+          ansible all --list-hosts -i inventory/inventory.yaml && \
+          ansible all -m package -a 'name=git state=present' -i inventory/inventory.yaml && \
+          ansible all -m user -a 'name=shruti state=present' -i inventory/inventory.yaml && \
+          ansible all -a 'id shruti' -i inventory/inventory.yaml
+        "
+        
+        expect {
+          "password for" {
+            send "${{ secrets.DEVOPS_PASSWORD }}\r"
+            
+          }
+         
+          eof
+        }
+        EOD
+      shell: bash
