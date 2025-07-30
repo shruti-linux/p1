@@ -1,0 +1,22 @@
+name: Switch to devops user with password
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  switch-user:
+    runs-on: [prflow]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Switch to devops user with password
+      run: |
+
+        
+        # Alternative method using echo (less secure)
+        # echo "$DEVOPS_PASSWORD" | sudo -S -u devops bash -c 'whoami'
+      shell: bash
+      env:
+        DEVOPS_PASSWORD: ${{ secrets.DEVOP_PASSWORD }}
