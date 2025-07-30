@@ -20,3 +20,14 @@ jobs:
       shell: bash
       env:
         DEVOPS_PASSWORD: ${{ secrets.DEVOP_PASSWORD }}
+
+    - name: Test connections with ping module
+      run: |
+        ansible all --list-hosts -i /home/devops/ansible/inventory/inventory.yaml
+
+    - name: Gather facts (more comprehensive test)
+      run: |
+        ansible all -m yum -a "name=git state=present"
+        ansible all -m user -a "name=shruti state=present"
+          ansible all -m "id shruti" 
+        
