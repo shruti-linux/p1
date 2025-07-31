@@ -17,4 +17,4 @@ jobs:
           echo "$DEVOPS_PASS" | sudo -S -u devops \
             cd /home/devops/ansible \
             ansible-playbook all -i /home/devops/ansible/inventory/inventory.yaml \
-           ansible/playbook.yml
+           ansible/playbook1-webserver.yaml
