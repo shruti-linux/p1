@@ -18,4 +18,4 @@ jobs:
       - name: Execute Ansible Playbook
      
         run: |  
-           ansible-playbook all  /home/devops/ansible/actions-runner/_work/p1/p1/ansible/playbook1-webserver.yaml -i /home/devops/ansible/inventory/inventory.yaml
+           ansible-playbook  /home/devops/ansible/actions-runner/_work/p1/p1/ansible/playbook1-webserver.yaml -i /home/devops/ansible/inventory/inventory.yaml
