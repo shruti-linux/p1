@@ -5,7 +5,7 @@ on:
 
 jobs:
   run-ansible:
-    runs-on: self-hosted
+    runs-on: devops
     
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +14,6 @@ jobs:
         env:
           DEVOPS_PASS: ${{ secrets.DEVOPS_PASSWORD }}
         run: |
-          echo "$DEVOPS_PASS" | sudo -S -u devops \
-            cd /home/devops/ansible \
-            ansible-playbook all -i /home/devops/ansible/inventory/inventory.yaml \
+         
+           ansible-playbook all -i /home/devops/ansible/inventory/inventory.yaml \
            ansible/playbook1-webserver.yaml
